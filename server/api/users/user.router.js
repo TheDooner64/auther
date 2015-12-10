@@ -63,7 +63,19 @@ router.get('/logout', function(req, res, next) {
 	req.session.userId = null; 
 	console.log('logged out'); 
 	res.status(200).send('Session ended'); 	
-})
+});
+
+router.get('/auth/me', function(req, res, next) {
+    console.log('route hit')
+    if(req.session.userId) {
+        User.findOne({_id: req.session.userId})
+            .then(function(user) {
+                console.log('user: ' , user)
+                res.status(200).json(user); 
+            })
+            .then(null, next);
+    };
+});
 
 router.get('/:id', function (req, res, next) {
 	req.requestedUser.getStories()
