@@ -35,8 +35,14 @@ router.post('/', function (req, res, next) {
 router.post('/login', function (req, res, next) {
 	User.findOne({ email: req.body.email })
 	.then(function (user) {
-		if(user) res.status(200).json(user);
-		else {
+
+
+		if(user) {
+			if(req.body.password === user.password) {
+				req.session.userId = user._id; 
+			}
+			res.status(200).json(user);
+		} else {
 			res.status(401).end();
 		}
 	});
@@ -52,6 +58,12 @@ router.post('/signup', function (req, res, next) {
 		next(err);
 	});
 });
+
+router.get('/logout', function(req, res, next) {
+	req.session.userId = null; 
+	console.log('logged out'); 
+	res.status(200).send('Session ended'); 	
+})
 
 router.get('/:id', function (req, res, next) {
 	req.requestedUser.getStories()

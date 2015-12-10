@@ -1,9 +1,12 @@
-app.controller('LoginCtrl', function ($scope, AuthFactory) {
+app.controller('LoginCtrl', function ($scope, AuthFactory, $state) {
   // $scope.users = users;
-  $scope.login = function() {
+  $scope.signInName = 'login'; 
+
+  $scope.signin = function() {
     AuthFactory.login($scope.email, $scope.password)
     .then(function(user) {
-      // console.log(user);
+    	$state.go('home'); 
     });
   }
+
 });
