@@ -32,6 +32,27 @@ router.post('/', function (req, res, next) {
 	.then(null, next);
 });
 
+router.post('/login', function (req, res, next) {
+	User.findOne({ email: req.body.email })
+	.then(function (user) {
+		if(user) res.status(200).json(user);
+		else {
+			res.status(401).end();
+		}
+	});
+});
+
+router.post('/signup', function (req, res, next) {
+	User.create({ email: req.body.email, password: req.body.password })
+	.then(function (user) {
+		res.status(200).json(user);
+	})
+	.then(null, function(err) {
+		err.status(401);
+		next(err);
+	});
+});
+
 router.get('/:id', function (req, res, next) {
 	req.requestedUser.getStories()
 	.then(function (stories) {
