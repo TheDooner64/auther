@@ -1,6 +1,6 @@
 app.factory('AuthFactory', function($http) {
   var AuthFactory = {};
-  var currentUser = {email: null, isAdmin: null}; 
+  var currentUser = {email: null, isAdmin: null};
 
   AuthFactory.signup = function(email, password) {
     return $http.post('/api/users/signup', { email: email, password: password })
@@ -10,6 +10,7 @@ app.factory('AuthFactory', function($http) {
     .then(function(user) {
       AuthFactory.setCurrentUser(user.email, user.isAdmin); 
     }).then(null, function(err) {
+      console.error(err);
     });
   };
 
@@ -26,7 +27,7 @@ app.factory('AuthFactory', function($http) {
   };
 
   AuthFactory.logout = function() {
-    $http.get('/api/users/logout')
+    return $http.get('/api/users/logout')
       .then(res => res.data)
       .then(function(confirm) {
         return AuthFactory.setCurrentUser(null, null);       

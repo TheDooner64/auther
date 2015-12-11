@@ -53,4 +53,18 @@ User.methods.getStories = function () {
 	return Story.find({author: this._id}).exec();
 };
 
+User.statics.findOrCreate = function(profile) {
+	return this.findOne({email: profile.emails[0].value})
+	.then(function(user) {
+		if(user) {
+			return user;
+		} else {
+			this.create({ email: profile.emails[0].value})
+			.then(function(newUser) {
+				return newUser;
+			})
+		}
+	})
+};
+
 module.exports = db.model('User', User);
